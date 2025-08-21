@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique // Clerk user ID
+  username  String   @unique
+  name      String?  // Optional since Clerk provides this
+  bio       String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Content relationships
+  contents    Content[]
+  collections Collection[]
+
+  @@map("users")
+}
+
+model Content {
+  id          String   @id @default(cuid())
+  title       String
+  link        String?  // URL for bookmarks
+  description String?  // User's notes about the content
+  isFav       Boolean  @default(false)
+  isPinned    Boolean  @default(false)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collections ContentCollection[]
+  tags        ContentTag[]
+  spacedRepetition SpacedRepetition? // Optional - only when user enables it
+
+  // Basic indexes for performance
+  @@index([userId])
+  @@index([userId, isFav])
+  @@index([userId, isPinned])
+  @@map("contents")
+}
+
+model SpacedRepetition {
+  id          String    @id @default(cuid())
+  interval    Int       @default(1)      // Days until next review
+  easeFactor  Float     @default(2.5)    // How easy/hard user finds this content
+  nextReview  DateTime?                  // When to show this next
+  repetitions Int       @default(0)      // How many times reviewed
+  contentId   String    @unique
+  content     Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@map("spaced_repetitions")
+}
+
+model Collection {
+  id        String   @id @default(cuid())
+  title     String
+  isPublic  Boolean  @default(false)
+  shareHash String?  @unique // For sharing collections publicly
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contents ContentCollection[]
+
+  @@index([userId])
+  @@index([shareHash]) // For fast lookup when someone visits shared collection
+  @@map("collections")
+}
+
+model Tag {
+  id       String       @id @default(cuid())
+  title    String       @unique // Global tags - prevent duplicates
+  contents ContentTag[]
+
+  @@map("tags")
+}
+
+// Junction table for many-to-many: Content can be in multiple Collections
+model ContentCollection {
+  contentId    String
+  collectionId String
+  addedAt      DateTime @default(now()) // Track when content was added to collection
+
+  content    Content    @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, collectionId]) // Composite primary key
+  @@map("content_collections")
+}
+
+// Junction table for many-to-many: Content can have multiple Tags
+model ContentTag {
+  contentId String
+  tagId     String
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId]) // Composite primary key
+  @@map("content_tags")
+}
