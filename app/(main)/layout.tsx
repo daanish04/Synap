@@ -1,3 +1,5 @@
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import React from "react";
 
 export default function MainLayout({
@@ -7,8 +9,13 @@ export default function MainLayout({
 }>) {
   return (
     <div className="flex flex-row h-screen">
-      <aside></aside>
-      {children}
+      <SidebarProvider>
+        <AppSidebar />
+        <main>
+          <SidebarTrigger className="h-12 w-12" />
+          {children}
+        </main>
+      </SidebarProvider>
     </div>
   );
 }
