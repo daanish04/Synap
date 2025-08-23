@@ -1,14 +1,13 @@
-"use client";
-
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { BrainCircuit, User } from "lucide-react";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { BrainCircuit } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { checkUser } from "@/lib/checkUser";
+import ClerkUserButton from "./ClerkUserButton";
 
-const Navbar = () => {
-  const router = useRouter();
+const Navbar = async () => {
+  await checkUser();
   return (
     <nav className="bg-white shadow-md shadow-gray-200 flex items-center justify-between px-10 py-2 sticky top-0 z-50">
       <div className="flex flex-row items-center gap-3">
@@ -31,15 +30,7 @@ const Navbar = () => {
           <Link href="/dashboard">
             <Button variant="default">Dashboard</Button>
           </Link>
-          <UserButton>
-            <UserButton.MenuItems>
-              <UserButton.Action
-                label="Visit Profile"
-                labelIcon={<User className="h-4 w-4" strokeWidth={2.5} />}
-                onClick={() => router.push("/profile")}
-              />
-            </UserButton.MenuItems>
-          </UserButton>
+          <ClerkUserButton />
         </SignedIn>
       </div>
     </nav>

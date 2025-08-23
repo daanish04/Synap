@@ -25,6 +25,11 @@ const items = [
     icon: Home,
   },
   {
+    title: "Contents",
+    url: "/content",
+    icon: BrainCircuit,
+  },
+  {
     title: "Collections",
     url: "/collections",
     icon: BookCopy,
@@ -76,10 +81,10 @@ export function AppSidebar() {
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url}>
+                  <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

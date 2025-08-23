@@ -11,7 +11,7 @@ export default function MainLayout({
     <div className="flex flex-row h-screen">
       <SidebarProvider>
         <AppSidebar />
-        <main>
+        <main className="flex-1">
           <SidebarTrigger className="h-12 w-12" />
           {children}
         </main>
