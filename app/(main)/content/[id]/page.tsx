@@ -1,7 +1,22 @@
+import ContentBodyClient from "@/components/ContentBodyClient";
+import { getContentById } from "@/actions/contentActions";
 import React from "react";
 
-const ContentBodyPage = () => {
-  return <div>ContentBodyPage</div>;
+type Props = {
+  params: { id: string };
 };
 
-export default ContentBodyPage;
+export default async function ContentBodyPage({ params }: Props) {
+  const { id } = await params;
+  const content = await getContentById(id);
+
+  if (!content) {
+    return <div className="p-6">This content doesn&apos;t exist.</div>;
+  }
+
+  return (
+    <div className="p-6">
+      <ContentBodyClient content={content} />
+    </div>
+  );
+}

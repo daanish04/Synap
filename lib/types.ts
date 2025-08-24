@@ -8,4 +8,9 @@ export type ContentItem = {
   isFav: boolean;
   isPinned: boolean;
   tags: { tag: Tag }[];
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  // formatted date strings to avoid hydration errors
+  createdAtFormatted?: string;
+  updatedAtFormatted?: string;
 };

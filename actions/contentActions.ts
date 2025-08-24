@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { checkUser } from "@/lib/checkUser";
 import db from "@/lib/prisma";
+import { formatDate } from "@/lib/utils";
 
 export async function addContent(formData: FormData) {
   const user = await checkUser();
@@ -162,6 +163,32 @@ export async function getUserContent() {
   } catch (error) {
     console.error("Error getting tags", error);
     return [];
+  }
+}
+
+export async function getContentById(id: string) {
+  const user = await checkUser();
+  if (!user) return null;
+
+  try {
+    const content = await db.content.findFirst({
+      where: { id, userId: user.id },
+      include: { tags: { include: { tag: true } } },
+    });
+    if (!content) return null;
+
+    // =format dates to stable strings to avoid SSR/CSR hydration mismatches
+    const createdAtFormatted = formatDate(content.createdAt);
+    const updatedAtFormatted = formatDate(content.updatedAt);
+
+    return {
+      ...content,
+      createdAtFormatted,
+      updatedAtFormatted,
+    };
+  } catch (error) {
+    console.error("getContentById error", error);
+    return null;
   }
 }
 
