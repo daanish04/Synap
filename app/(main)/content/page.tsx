@@ -13,7 +13,7 @@ const ContentPage = async () => {
 
   return (
     <div className="p-6">
-      <ContentsClient contents={contents} tags={tags} />
+      <ContentsClient mode={"contents"} contents={contents} tags={tags} />
     </div>
   );
 };

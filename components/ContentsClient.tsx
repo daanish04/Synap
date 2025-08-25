@@ -53,9 +53,11 @@ import { toast } from "sonner";
 export default function ContentsClient({
   contents: initialContents,
   tags,
+  mode,
 }: {
   contents: ContentItem[];
   tags: Tag[];
+  mode?: string;
 }) {
   // Use state for optimistic updates
   const [contents, setContents] = useState(initialContents);
@@ -240,7 +242,9 @@ export default function ContentsClient({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Contents</h2>
+        <h2 className="text-2xl font-semibold">
+          {mode === "favorites" ? "Favorites" : "Contents"}
+        </h2>
         <div className="flex items-center gap-3">
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
@@ -261,7 +265,11 @@ export default function ContentsClient({
                   required
                   autoSave="off"
                 />
-                <Textarea name="description" placeholder="Description" />
+                <Textarea
+                  name="description"
+                  placeholder="Description"
+                  className="max-h-60"
+                />
                 <Input
                   name="link"
                   placeholder="Link (optional)"
@@ -428,6 +436,7 @@ export default function ContentsClient({
                             name="description"
                             placeholder="Description"
                             defaultValue={item.description || ""}
+                            className="max-h-60"
                           />
                           <Input
                             name="link"

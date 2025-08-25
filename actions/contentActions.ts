@@ -190,6 +190,31 @@ export async function getContentById(id: string) {
   }
 }
 
+export async function getFavoriteContent() {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+
+  try {
+    const contents = await db.content.findMany({
+      where: { userId: user.id, isFav: true },
+      include: { tags: { include: { tag: true } } },
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
+    });
+
+    if (contents.length === 0) throw new Error("No favorite content found");
+
+    const tags = await db.tag.findMany({
+      where: { contents: { some: { content: { userId: user.id } } } },
+      distinct: ["title"],
+    });
+
+    return { success: true, data: { contents, tags } };
+  } catch (error) {
+    console.error("getFavoriteContent error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
 export async function updateContent(formData: FormData) {
   const user = await checkUser();
   if (!user) return { success: false, error: "User not authenticated" };
