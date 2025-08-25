@@ -1,7 +1,7 @@
 "use client";
 
 import { ContentItem } from "@/lib/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ExternalLink, Heart, Pin, PinOff, Trash2 } from "lucide-react";
 import { Separator } from "./ui/separator";
@@ -33,10 +33,43 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { Switch } from "./ui/switch";
+import { useRouter } from "next/navigation";
 
-const ContentBodyClient = ({ content }: { content: ContentItem }) => {
+const ContentBodyClient = ({
+  content: initialContent,
+}: {
+  content: ContentItem;
+}) => {
+  const [content, setContent] = useState(initialContent);
   const [loading, setLoading] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
+
+  const handleToggleFavorite = async () => {
+    const wasLiked = content.isFav;
+    setContent((prev) => ({ ...prev, isFav: !prev.isFav }));
+    const res = await toggleFavorite(content.id);
+    if (!res?.success) {
+      setContent((prev) => ({ ...prev, isFav: wasLiked }));
+      return toast.error(res?.error || "Failed");
+    }
+    toast.success(content.isFav ? "Removed favorite" : "Added favorite");
+  };
+
+  const handleTogglePinned = async () => {
+    const wasPinned = content.isPinned;
+    setContent((prev) => ({ ...prev, isPinned: !prev.isPinned }));
+    const res = await togglePin(content.id);
+    if (!res?.success) {
+      setContent((prev) => ({ ...prev, isPinned: wasPinned }));
+      return toast.error(res?.error || "Failed");
+    }
+    toast.success(content.isPinned ? "Unpinned" : "Pinned");
+  };
 
   const updateContentHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -155,24 +188,14 @@ const ContentBodyClient = ({ content }: { content: ContentItem }) => {
           <div className="flex flex-row gap-2">
             <Button
               variant={content.isFav ? "secondary" : "outline"}
-              onClick={async () => {
-                const res = await toggleFavorite(content.id);
-                if (!res?.success) return toast.error(res?.error || "Failed");
-                toast.success(
-                  content.isFav ? "Removed favorite" : "Added favorite"
-                );
-              }}
+              onClick={handleToggleFavorite}
             >
               {content.isFav ? <Heart fill="red" /> : <Heart />}
             </Button>
 
             <Button
               variant={content.isPinned ? "secondary" : "outline"}
-              onClick={async () => {
-                const res = await togglePin(content.id);
-                if (!res?.success) return toast.error(res?.error || "Failed");
-                toast.success(content.isPinned ? "Unpinned" : "Pinned");
-              }}
+              onClick={handleTogglePinned}
             >
               {content.isPinned ? (
                 <Pin className="rotate-55" />
@@ -212,6 +235,7 @@ const ContentBodyClient = ({ content }: { content: ContentItem }) => {
                       const res = await deleteContent(content.id);
                       if (!res?.success)
                         return toast.error(res?.error || "Failed");
+                      router.push("/content");
                       toast.success("Content deleted");
                     }}
                   >

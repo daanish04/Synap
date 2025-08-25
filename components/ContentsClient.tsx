@@ -51,12 +51,14 @@ import {
 import { toast } from "sonner";
 
 export default function ContentsClient({
-  contents,
+  contents: initialContents,
   tags,
 }: {
   contents: ContentItem[];
   tags: Tag[];
 }) {
+  // Use state for optimistic updates
+  const [contents, setContents] = useState(initialContents);
   const [query, setQuery] = useState("");
   const [tagQuery, setTagQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -65,6 +67,11 @@ export default function ContentsClient({
   const [editingId, setEditingId] = useState<string | null>(null);
   const comboRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+
+  // Update contents when initialContents changes (after mutations)
+  useEffect(() => {
+    setContents(initialContents);
+  }, [initialContents]);
 
   const tagSuggestions = useMemo(() => {
     const q = tagQuery.trim().toLowerCase();
@@ -108,28 +115,106 @@ export default function ContentsClient({
     setSelectedTags((s) => s.filter((x) => x !== t));
   };
 
+  const handleToggleFavorite = async (itemId: string) => {
+    const currentItem = contents.find((c) => c.id === itemId);
+    const wasLiked = currentItem?.isFav;
+
+    // Optimistic update
+    setContents((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, isFav: !item.isFav } : item
+      )
+    );
+
+    const res = await toggleFavorite(itemId);
+    if (!res?.success) {
+      // Revert on failure
+      setContents((prev) =>
+        prev.map((item) =>
+          item.id === itemId ? { ...item, isFav: !item.isFav } : item
+        )
+      );
+      toast.error(res?.error || "Failed to toggle favorite");
+      return;
+    }
+
+    toast.success(wasLiked ? "Removed from favorites" : "Added to favorites");
+  };
+
+  const handleTogglePin = async (itemId: string) => {
+    const currentItem = contents.find((c) => c.id === itemId);
+    if (!currentItem) return;
+
+    const wasPinned = currentItem.isPinned;
+
+    // Check pin limit before update
+    if (!wasPinned) {
+      const currentPinnedCount = contents.filter((c) => c.isPinned).length;
+      if (currentPinnedCount >= 5) {
+        toast.error("You can only pin up to 5 items. Unpin something first.");
+        return;
+      }
+    }
+
+    // Optimistic update
+    setContents((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, isPinned: !item.isPinned } : item
+      )
+    );
+
+    const res = await togglePin(itemId);
+    if (!res?.success) {
+      // Revert on failure
+      setContents((prev) =>
+        prev.map((item) =>
+          item.id === itemId ? { ...item, isPinned: !item.isPinned } : item
+        )
+      );
+      toast.error(res?.error || "Failed to toggle pin");
+      return;
+    }
+
+    toast.success(wasPinned ? "Unpinned" : "Pinned");
+  };
+
+  const handleDelete = async (itemId: string) => {
+    const itemToDelete = contents.find((c) => c.id === itemId);
+
+    // Optimistic update - remove immediately
+    setContents((prev) => prev.filter((item) => item.id !== itemId));
+
+    const res = await deleteContent(itemId);
+    if (!res?.success) {
+      // add back the item on failure
+      if (itemToDelete) {
+        setContents((prev) => [...prev, itemToDelete]);
+      }
+      toast.error(res?.error || "Failed to delete");
+      return;
+    }
+
+    toast.success("Content deleted");
+  };
+
   const updateContentHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    try {
-      const res = await updateContent(formData);
-      if (!res?.success) {
-        toast.error(res?.error || "Failed to update content");
-        setLoading(false);
-        return;
-      }
 
-      // success: reset form, close dialog and refresh
-      form.reset();
-      setEditingId(null);
-      toast.success("Content updated");
-    } catch (err) {
-      toast.error((err as Error)?.message || "Failed to update content");
-    } finally {
+    const res = await updateContent(formData);
+    if (!res?.success) {
+      toast.error(res?.error || "Failed to update content");
       setLoading(false);
+      return;
     }
+
+    // success: reset form, close dialog
+    form.reset();
+    setEditingId(null);
+    toast.success("Content updated");
+    setLoading(false);
   };
 
   const createContentHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -137,18 +222,18 @@ export default function ContentsClient({
     setLoading(true);
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    const response = await addContent(formData);
-    if (!response?.success) {
-      toast.error(response?.error || "Failed to add content");
+
+    const res = await addContent(formData);
+    if (!res?.success) {
+      toast.error(res?.error || "Failed to add content");
       setLoading(false);
       return;
     }
 
-    // success: reset form, close dialog and refresh
+    // success: reset form, close dialog
     form.reset();
     setAddOpen(false);
     toast.success("Content added");
-
     setLoading(false);
   };
 
@@ -294,26 +379,14 @@ export default function ContentsClient({
                   <div className="flex gap-2">
                     <Button
                       variant={item.isFav ? "secondary" : "outline"}
-                      onClick={async () => {
-                        const res = await toggleFavorite(item.id);
-                        if (!res?.success)
-                          return toast.error(res?.error || "Failed");
-                        toast.success(
-                          item.isFav ? "Removed favorite" : "Added favorite"
-                        );
-                      }}
+                      onClick={() => handleToggleFavorite(item.id)}
                     >
                       {item.isFav ? <Heart fill="red" /> : <Heart />}
                     </Button>
 
                     <Button
                       variant={item.isPinned ? "secondary" : "outline"}
-                      onClick={async () => {
-                        const res = await togglePin(item.id);
-                        if (!res?.success)
-                          return toast.error(res?.error || "Failed");
-                        toast.success(item.isPinned ? "Unpinned" : "Pinned");
-                      }}
+                      onClick={() => handleTogglePin(item.id)}
                     >
                       {item.isPinned ? (
                         <Pin className="rotate-55" />
@@ -418,12 +491,7 @@ export default function ContentsClient({
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={async () => {
-                              const res = await deleteContent(item.id);
-                              if (!res?.success)
-                                return toast.error(res?.error || "Failed");
-                              toast.success("Content deleted");
-                            }}
+                            onClick={() => handleDelete(item.id)}
                           >
                             Continue
                           </AlertDialogAction>

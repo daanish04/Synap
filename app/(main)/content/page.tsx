@@ -3,12 +3,14 @@ import { getUserContent } from "@/actions/contentActions";
 import ContentsClient from "@/components/ContentsClient";
 
 const ContentPage = async () => {
-  const userContents = await getUserContent();
-  if (!userContents || Array.isArray(userContents)) {
-    return <div>Loading...</div>;
-  }
+  const response = await getUserContent();
 
-  const { contents, tags } = userContents;
+  if (!response.success || !response.data) {
+    return <div>Something went wrong. {response.error}</div>;
+  }
+  const contents = response.data.contents;
+  const tags = response.data.tags;
+
   return (
     <div className="p-6">
       <ContentsClient contents={contents} tags={tags} />

@@ -7,12 +7,14 @@ type Props = {
 };
 
 export default async function ContentBodyPage({ params }: Props) {
-  const { id } = await params;
-  const content = await getContentById(id);
+  const { id } = params;
+  const response = await getContentById(id);
 
-  if (!content) {
+  if (!response.success || !response.data) {
     return <div className="p-6">This content doesn&apos;t exist.</div>;
   }
+
+  const content = response.data;
 
   return (
     <div className="p-6">
