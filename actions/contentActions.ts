@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 export async function addContent(formData: FormData) {
   const user = await checkUser();
   if (!user) {
-    return { success: false, error: "Not authenticated" };
+    throw new Error("User not authenticated");
   }
 
   const title = formData.get("title")?.toString().trim() || "";
@@ -17,7 +17,7 @@ export async function addContent(formData: FormData) {
   const tagsRaw = formData.get("tags")?.toString() || "";
 
   if (title === "") {
-    return { success: false, error: "Title is required" };
+    throw new Error("Title is required");
   }
 
   try {
@@ -79,10 +79,10 @@ export async function addContent(formData: FormData) {
 
 export async function toggleFavorite(id: string) {
   const user = await checkUser();
-  if (!user) return { success: false, error: "Not authenticated" };
+  if (!user) throw new Error("User not authenticated");
 
   const contentId = id;
-  if (!contentId) return { success: false, error: "Invalid id" };
+  if (!contentId) throw new Error("Invalid id");
 
   try {
     // Use transaction to avoid race conditions: read -> update atomically inside tx
@@ -90,7 +90,7 @@ export async function toggleFavorite(id: string) {
       const content = await tx.content.findFirst({
         where: { id: contentId, userId: user.id },
       });
-      if (!content) return;
+      if (!content) throw new Error("Content not found");
 
       await tx.content.update({
         where: { id: contentId },
@@ -108,7 +108,7 @@ export async function toggleFavorite(id: string) {
 
 export async function togglePin(id: string) {
   const user = await checkUser();
-  if (!user) return { success: false, error: "Not authenticated" };
+  if (!user) throw new Error("Not authenticated");
 
   const contentId = id;
   if (!contentId) return { success: false, error: "Invalid id" };
@@ -118,7 +118,7 @@ export async function togglePin(id: string) {
       const content = await tx.content.findFirst({
         where: { id: contentId, userId: user.id },
       });
-      if (!content) return;
+      if (!content) throw new Error("Content not found");
 
       if (!content.isPinned) {
         const pinnedCount = await tx.content.count({
@@ -147,7 +147,7 @@ export async function togglePin(id: string) {
 
 export async function getUserContent() {
   const user = await checkUser();
-  if (!user) return [];
+  if (!user) throw new Error("Not authenticated");
   try {
     const contents = await db.content.findMany({
       where: { userId: user.id },
@@ -159,45 +159,50 @@ export async function getUserContent() {
       distinct: ["title"],
     });
 
-    return { contents, tags };
+    return { success: true, data: { contents, tags } };
   } catch (error) {
     console.error("Error getting tags", error);
-    return [];
+    return { success: false, error: (error as Error).message };
   }
 }
 
 export async function getContentById(id: string) {
   const user = await checkUser();
-  if (!user) return null;
+  if (!user) throw new Error("User not authenticated");
+
+  if (!id) throw new Error("Invalid Id");
 
   try {
     const content = await db.content.findFirst({
       where: { id, userId: user.id },
       include: { tags: { include: { tag: true } } },
     });
-    if (!content) return null;
+    if (!content) throw new Error("Content not found");
 
-    // =format dates to stable strings to avoid SSR/CSR hydration mismatches
+    // format dates to stable strings to avoid SSR/CSR hydration mismatches
     const createdAtFormatted = formatDate(content.createdAt);
     const updatedAtFormatted = formatDate(content.updatedAt);
 
     return {
-      ...content,
-      createdAtFormatted,
-      updatedAtFormatted,
+      success: true,
+      data: {
+        ...content,
+        createdAtFormatted,
+        updatedAtFormatted,
+      },
     };
   } catch (error) {
     console.error("getContentById error", error);
-    return null;
+    return { success: false, error: (error as Error).message };
   }
 }
 
 export async function updateContent(formData: FormData) {
   const user = await checkUser();
-  if (!user) return { success: false, error: "Not authenticated" };
+  if (!user) throw new Error("Not authenticated");
 
   const id = formData.get("id")?.toString();
-  if (!id) return { success: false, error: "Missing id" };
+  if (!id) throw new Error("Missing id");
 
   const title = formData.get("title")?.toString().trim() || "";
   const description = formData.get("description")?.toString().trim() || "";
@@ -205,7 +210,7 @@ export async function updateContent(formData: FormData) {
   const tagsRaw = formData.get("tags")?.toString() || "";
 
   if (title === "") {
-    return { success: false, error: "Title is required" };
+    throw new Error("Title is required");
   }
 
   try {
@@ -266,8 +271,8 @@ export async function updateContent(formData: FormData) {
 
 export async function deleteContent(id: string) {
   const user = await checkUser();
-  if (!user) return { success: false, error: "Not authenticated" };
-  if (!id) return { success: false, error: "Missing id" };
+  if (!user) throw new Error("Not authenticated");
+  if (!id) throw new Error("Missing id");
 
   try {
     await db.$transaction(async (tx) => {
