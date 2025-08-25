@@ -77,13 +77,15 @@ export function AppSidebar() {
           </div>
         </div>
         <SidebarGroup>
-          <SidebarMenu className="flex flex-col justify-center items-start mb-2 px-20">
+          <SidebarMenu className="flex flex-col justify-center items-start mb-2 px-15">
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
                   <Link href={item.url}>
                     <item.icon />
-                    <span>{item.title}</span>
+                    <span className="text-base font-semibold text-neutral-800">
+                      {item.title}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
