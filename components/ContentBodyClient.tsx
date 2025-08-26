@@ -44,6 +44,10 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import { Switch } from "./ui/switch";
+import {
+  getCollectionsForContent,
+  toggleContentInCollection,
+} from "@/actions/collectionActions";
 
 const ContentBodyClient = ({
   content: initialContent,
@@ -53,11 +57,22 @@ const ContentBodyClient = ({
   const [content, setContent] = useState(initialContent);
   const [loading, setLoading] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [collectionsOpen, setCollectionsOpen] = useState(false);
+  const [collections, setCollections] = useState<
+    { id: string; title: string; included: boolean }[]
+  >([]);
   const router = useRouter();
 
   useEffect(() => {
     setContent(initialContent);
   }, [initialContent]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getCollectionsForContent(content.id);
+      if (res?.success && res.data) setCollections(res.data);
+    })();
+  }, [content.id]);
 
   const handleToggleFavorite = async () => {
     const wasLiked = content.isFav;
@@ -162,7 +177,61 @@ const ContentBodyClient = ({
               </form>
             </DialogContent>
           </Dialog>
-          <Button variant="default">Add to Collection</Button>
+
+          <Dialog open={collectionsOpen} onOpenChange={setCollectionsOpen}>
+            <DialogTrigger asChild>
+              <Button variant="default">Add to Collection</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add to Collection</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-2">
+                {collections.length === 0 ? (
+                  <div className="text-sm text-muted-foreground">
+                    No collections yet.
+                  </div>
+                ) : (
+                  collections.map((c) => (
+                    <label
+                      key={c.id}
+                      className="flex items-center justify-between border rounded p-2"
+                    >
+                      <span>{c.title}</span>
+                      <input
+                        type="checkbox"
+                        checked={c.included}
+                        onChange={async () => {
+                          const prev = c.included;
+                          setCollections((list) =>
+                            list.map((it) =>
+                              it.id === c.id
+                                ? { ...it, included: !it.included }
+                                : it
+                            )
+                          );
+                          const res = await toggleContentInCollection(
+                            c.id,
+                            content.id
+                          );
+                          if (!res?.success) {
+                            setCollections((list) =>
+                              list.map((it) =>
+                                it.id === c.id ? { ...it, included: prev } : it
+                              )
+                            );
+                            toast.error(
+                              res?.error || "Failed to update collection"
+                            );
+                          }
+                        }}
+                      />
+                    </label>
+                  ))
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

@@ -14,3 +14,17 @@ export type ContentItem = {
   createdAtFormatted?: string;
   updatedAtFormatted?: string;
 };
+
+export type CollectionSummary = {
+  id: string;
+  title: string;
+  isPublic: boolean;
+  createdAtFormatted: string;
+  contentsCount: number;
+};
+
+export type CollectionForContent = {
+  id: string;
+  title: string;
+  included: boolean;
+};

@@ -36,7 +36,6 @@ import {
   PinOff,
   Trash2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +48,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function ContentsClient({
   contents: initialContents,
@@ -68,7 +68,6 @@ export default function ContentsClient({
   const [addOpen, setAddOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const comboRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
 
   // Update contents when initialContents changes (after mutations)
   useEffect(() => {
@@ -241,58 +240,60 @@ export default function ContentsClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">
-          {mode === "favorites" ? "Favorites" : "Contents"}
-        </h2>
-        <div className="flex items-center gap-3">
-          <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <DialogTrigger asChild>
-              <Button className="cursor-pointer">Add Content</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Content</DialogTitle>
-                <DialogDescription>
-                  Save an article, note, or link to your library.
-                </DialogDescription>
-              </DialogHeader>
+      {mode != "collection" && (
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold">
+            {mode === "favorites" ? "Favorites" : "Contents"}
+          </h2>
+          <div className="flex items-center gap-3">
+            <Dialog open={addOpen} onOpenChange={setAddOpen}>
+              <DialogTrigger asChild>
+                <Button className="cursor-pointer">Add Content</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Content</DialogTitle>
+                  <DialogDescription>
+                    Save an article, note, or link to your library.
+                  </DialogDescription>
+                </DialogHeader>
 
-              <form onSubmit={createContentHandler} className="grid gap-3">
-                <Input
-                  name="title"
-                  placeholder="Title"
-                  required
-                  autoSave="off"
-                />
-                <Textarea
-                  name="description"
-                  placeholder="Description"
-                  className="max-h-60"
-                />
-                <Input
-                  name="link"
-                  placeholder="Link (optional)"
-                  autoSave="off"
-                />
-                <Input
-                  name="tags"
-                  placeholder="Tags (comma separated)"
-                  autoSave="off"
-                />
+                <form onSubmit={createContentHandler} className="grid gap-3">
+                  <Input
+                    name="title"
+                    placeholder="Title"
+                    required
+                    autoSave="off"
+                  />
+                  <Textarea
+                    name="description"
+                    placeholder="Description"
+                    className="max-h-60"
+                  />
+                  <Input
+                    name="link"
+                    placeholder="Link (optional)"
+                    autoSave="off"
+                  />
+                  <Input
+                    name="tags"
+                    placeholder="Tags (comma separated)"
+                    autoSave="off"
+                  />
 
-                <Button
-                  className="cursor-pointer"
-                  disabled={loading}
-                  type="submit"
-                >
-                  Save
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+                  <Button
+                    className="cursor-pointer"
+                    disabled={loading}
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex items-center justify-between gap-3 w-full sm:max-w-md">
@@ -361,11 +362,13 @@ export default function ContentsClient({
             {filtered.map((item) => (
               <Card key={item.id} className="relative">
                 <CardHeader>
-                  <CardTitle
-                    className="hover:underline cursor-pointer"
-                    onClick={() => router.push(`/content/${item.id}`)}
-                  >
-                    {item.title}
+                  <CardTitle>
+                    <Link
+                      href={`/content/${item.id}`}
+                      className="hover:underline"
+                    >
+                      {item.title}
+                    </Link>
                   </CardTitle>
                   <CardDescription className="overflow-hidden text-ellipsis max-h-40">
                     {item.description || "There's nothing to display."}
