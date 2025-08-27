@@ -261,9 +261,9 @@ const ContentBodyClient = ({
         )}
       </div>
 
-      <div className="sticky bottom-0 bg-white pb-2">
+      <div className="sticky bottom-0 bg-white sm:pb-4 pb-14">
         <Separator className="my-4" />
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-5">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
           <div className="flex flex-row gap-2">
             <Button
               variant={content.isFav ? "secondary" : "outline"}
@@ -352,32 +352,32 @@ const ContentBodyClient = ({
                   <Separator className="my-4" />
                   <div className="flex flex-col gap-3">
                     <div className="text-center">Your review is due:</div>
-                    <div className="flex flex-row">
-                      <div className="flex flex-col gap-1 text-center py-1 px-3 border rounded-l-md w-xs hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                    <div className="grid sm:grid-cols-5 grid-cols-6">
+                      <div className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border rounded-l-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                         <span className="font-bold text-sm">FORGOT</span>
                         <span className="text-xs text-muted-foreground">
                           Completely forgot
                         </span>
                       </div>
-                      <div className="flex flex-col gap-1 text-center py-1 px-3 border w-xs hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                      <div className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border  hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                         <span className="font-bold text-sm">HARD</span>
                         <span className="text-xs text-muted-foreground">
                           Remembered with difficulty
                         </span>
                       </div>
-                      <div className="flex flex-col gap-1 text-center py-1 px-3 border w-xs hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                      <div className="sm:col-span-1 col-span-2 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                         <span className="font-bold text-sm">GOOD</span>
                         <span className="text-xs text-muted-foreground">
                           Remembered with some effort
                         </span>
                       </div>
-                      <div className="flex flex-col gap-1 text-center py-1 px-3 border w-xs hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                      <div className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                         <span className="font-bold text-sm">EASY</span>
                         <span className="text-xs text-muted-foreground">
                           Remembered easily
                         </span>
                       </div>
-                      <div className="flex flex-col gap-1 text-center py-1 px-3 border rounded-r-md w-xs hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                      <div className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border rounded-r-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                         <span className="font-bold text-sm">VERY EASY</span>
                         <span className="text-xs text-muted-foreground">
                           Too Easy
@@ -403,7 +403,6 @@ const ContentBodyClient = ({
                 </div>
               </DrawerContent>
             </Drawer>
-            {/* also show next review date for the content if clicked up yes */}
           </div>
         </div>
       </div>
