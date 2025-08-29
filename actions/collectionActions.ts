@@ -169,3 +169,58 @@ export async function createCollection(formData: FormData) {
     return { success: false, error: (error as Error).message };
   }
 }
+
+export async function deleteCollection(id: string) {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+  if (!id) return { success: false, error: "Collection not found" };
+
+  try {
+    const collection = await db.collection.findFirst({
+      where: { userId: user.id, id },
+    });
+    if (!collection) return { success: false, error: "Collection not found" };
+
+    await db.$transaction(async (tx) => {
+      await tx.contentCollection.deleteMany({ where: { collectionId: id } });
+      await tx.collection.deleteMany({ where: { id } });
+    });
+
+    revalidatePath("/collections");
+    return { success: true };
+  } catch (error) {
+    console.error("deleteCollection error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function updateCollection(id: string, formData: FormData) {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+  if (!id) return { success: false, error: "Collection not found" };
+
+  const title = formData.get("title")?.toString().trim() || "";
+  const isPublic =
+    (formData.get("isPublic")?.toString() || "false").toLowerCase() === "true";
+
+  if (title === "") return { success: false, error: "Title is required" };
+
+  try {
+    const collection = await db.collection.findFirst({
+      where: { userId: user.id, id },
+    });
+    if (!collection) return { success: false, error: "Collection not found" };
+
+    await db.collection.update({
+      where: { id, userId: user.id },
+      data: { title, isPublic },
+    });
+
+    revalidatePath("/collections");
+    revalidatePath(`/collections/${id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("updateCollection error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
