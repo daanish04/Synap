@@ -1,5 +1,10 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import React from "react";
 
 export default function MainLayout({
@@ -12,7 +17,15 @@ export default function MainLayout({
       <SidebarProvider>
         <AppSidebar />
         <main className="flex-1 overflow-x-hidden">
-          <SidebarTrigger className="h-12 w-12" />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <SidebarTrigger className="h-10 w-10" />
+            </TooltipTrigger>
+            <TooltipContent side="right" align="center">
+              <p>Toggle Sidebar</p>
+            </TooltipContent>
+          </Tooltip>
+
           {children}
         </main>
       </SidebarProvider>
