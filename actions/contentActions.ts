@@ -161,6 +161,23 @@ export async function getUserContent() {
   }
 }
 
+export async function getRecentContent() {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+  try {
+    const contents = await db.content.findMany({
+      where: { userId: user.id },
+      include: { tags: { include: { tag: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+    return { success: true, data: contents };
+  } catch (error) {
+    console.error("getRecentContent error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
 export async function getContentById(id: string) {
   const user = await checkUser();
   if (!user) return { success: false, error: "User not authenticated" };
@@ -211,6 +228,22 @@ export async function getFavoriteContent() {
     return { success: true, data: { contents, tags } };
   } catch (error) {
     console.error("getFavoriteContent error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getPinnedContent() {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+  try {
+    const contents = await db.content.findMany({
+      where: { userId: user.id, isPinned: true },
+      include: { tags: { include: { tag: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+    return { success: true, data: contents };
+  } catch (error) {
+    console.error("getPinnedContent error", error);
     return { success: false, error: (error as Error).message };
   }
 }
