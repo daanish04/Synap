@@ -3,11 +3,15 @@ import { getContentById } from "@/actions/contentActions";
 import React from "react";
 
 type Props = {
-  params: { id: string };
+  params?: Promise<{ id: string }>;
 };
 
 export default async function ContentBodyPage({ params }: Props) {
-  const { id } = params;
+  const param = await params;
+  const id = param?.id;
+
+  if (!id) return <div className="p-6">This content doesn&apos;t exist.</div>;
+
   const response = await getContentById(id);
 
   if (!response.success || !response.data) {

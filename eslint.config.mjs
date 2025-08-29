@@ -13,4 +13,9 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
+// Ignore generated and vendor files that cause noisy lint errors during CI/build
+eslintConfig.push({
+  ignores: [".next/**", "lib/generated/**"],
+});
+
 export default eslintConfig;

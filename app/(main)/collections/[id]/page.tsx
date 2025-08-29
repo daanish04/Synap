@@ -2,8 +2,16 @@ import React from "react";
 import { getCollectionById } from "@/actions/collectionActions";
 import ContentsClient from "@/components/ContentsClient";
 
-const CollectionDetailPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+type Props = {
+  params?: Promise<{ id: string }>;
+};
+
+const CollectionDetailPage = async ({ params }: Props) => {
+  const param = await params;
+  const id = param?.id;
+
+  if (!id) return <div className="p-6">Collection not found.</div>;
+
   const response = await getCollectionById(id);
 
   if (!response.success || !response.data) {
