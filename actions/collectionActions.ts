@@ -194,9 +194,11 @@ export async function deleteCollection(id: string) {
   }
 }
 
-export async function updateCollection(id: string, formData: FormData) {
+export async function updateCollection(formData: FormData) {
   const user = await checkUser();
   if (!user) return { success: false, error: "User not authenticated" };
+
+  const id = formData.get("id")?.toString();
   if (!id) return { success: false, error: "Collection not found" };
 
   const title = formData.get("title")?.toString().trim() || "";

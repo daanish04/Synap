@@ -1,6 +1,10 @@
 import React from "react";
-import { getCollectionById } from "@/actions/collectionActions";
+import {
+  getCollectionById,
+  updateCollection,
+} from "@/actions/collectionActions";
 import ContentsClient from "@/components/ContentsClient";
+import CollectionCreateDialog from "@/components/CollectionCreateDialog";
 
 type Props = {
   params?: Promise<{ id: string }>;
@@ -28,10 +32,21 @@ const CollectionDetailPage = async ({ params }: Props) => {
           <div className="text-sm text-muted-foreground">
             Created {collection.createdAtFormatted}
           </div>
+          <span className="text-xs px-2 py-1 rounded border">
+            {collection.isPublic ? (
+              <span className="text-blue-700">Public</span>
+            ) : (
+              <span className="text-red-700">Private</span>
+            )}
+          </span>
         </div>
-        <span className="text-xs px-2 py-1 rounded border">
-          {collection.isPublic ? "Public" : "Private"}
-        </span>
+        <div>
+          <CollectionCreateDialog
+            create={updateCollection}
+            id={id}
+            data={collection}
+          />
+        </div>
       </div>
 
       <ContentsClient contents={contents} tags={tags} mode="collection" />

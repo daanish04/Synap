@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,25 +15,38 @@ import { toast } from "sonner";
 
 type Props = {
   create: (formData: FormData) => Promise<{ success: boolean; error?: string }>;
+  id?: string;
+  data?: { title: string; isPublic: boolean };
 };
 
-const CollectionCreateDialog = ({ create }: Props) => {
+const CollectionCreateDialog = ({ create, id, data }: Props) => {
   const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title);
+      setIsPublic(data.isPublic);
+    }
+  }, [data]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="cursor-pointer">Create Collection</Button>
+        <Button className="cursor-pointer">
+          {id ? "Edit" : "Create"} Collection
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Collection</DialogTitle>
+          <DialogTitle>{id ? "Edit" : "Create"} Collection</DialogTitle>
         </DialogHeader>
         <form
           action={(formData: FormData) => {
             formData.set("isPublic", isPublic ? "true" : "false");
+            if (id) formData.set("id", id);
             startTransition(async () => {
               const res = await create(formData);
               if (res?.error) {
@@ -50,13 +63,15 @@ const CollectionCreateDialog = ({ create }: Props) => {
             placeholder="Collection name"
             required
             autoSave="off"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <div className="flex items-center justify-between">
             <span>Public</span>
             <Switch checked={isPublic} onCheckedChange={setIsPublic} />
           </div>
           <Button disabled={isPending} type="submit" className="cursor-pointer">
-            {isPending ? "Creating..." : "Create"}
+            {isPending ? (id ? "Updating..." : "Creating...") : "Save"}
           </Button>
         </form>
       </DialogContent>
