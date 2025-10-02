@@ -32,9 +32,9 @@ const DashboardCollections = ({
 
   return (
     <div className="relative h-full px-4 py-2 rounded-xl border">
-      <div className="absolute -right-3 -top-3 flex items-center rounded-2xl bg-gray-200 hover:bg-gray-300 transition-colors duration-300 cursor-pointer p-2 border">
-        <Link href="/content">
-          <ChevronsRight className="h-6 w-6" />
+      <div className="absolute -right-3 -top-3 flex items-center rounded-xl bg-gray-200 hover:bg-gray-300 transition-colors duration-300 cursor-pointer p-1.5 border">
+        <Link href="/collections">
+          <ChevronsRight className="h-5 w-5" />
         </Link>
       </div>
       <h3 className="text-xl font-semibold mb-2">Your Collections</h3>
