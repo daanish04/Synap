@@ -5,6 +5,7 @@ import {
 } from "@/actions/collectionActions";
 import ContentsClient from "@/components/ContentsClient";
 import CollectionCreateDialog from "@/components/CollectionCreateDialog";
+import PublicDialog from "@/components/public-dialog";
 
 type Props = {
   params?: Promise<{ id: string }>;
@@ -29,16 +30,18 @@ const CollectionDetailPage = async ({ params }: Props) => {
       <div className="flex items-center justify-between  space-y-6">
         <div>
           <h2 className="text-2xl font-semibold">{collection.title}</h2>
-          <div className="text-sm text-muted-foreground">
-            Created {collection.createdAtFormatted}
+          <div className="flex gap-4 items-center">
+            <div className="text-sm text-muted-foreground">
+              Created {collection.createdAtFormatted}
+            </div>
+            <span className="text-xs px-2 py-1 rounded border">
+              {collection.isPublic ? (
+                <PublicDialog shareLink={collection.shareHash} />
+              ) : (
+                <span className="text-red-700">Private</span>
+              )}
+            </span>
           </div>
-          <span className="text-xs px-2 py-1 rounded border">
-            {collection.isPublic ? (
-              <span className="text-blue-700">Public</span>
-            ) : (
-              <span className="text-red-700">Private</span>
-            )}
-          </span>
         </div>
         <div>
           <CollectionCreateDialog

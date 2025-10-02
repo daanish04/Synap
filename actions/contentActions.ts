@@ -207,6 +207,33 @@ export async function getContentById(id: string) {
   }
 }
 
+export async function getPublicContentById(id: string) {
+  if (!id) return { success: false, error: "Content not found." };
+
+  try {
+    const content = await db.content.findFirst({
+      where: { id },
+      include: { tags: { include: { tag: true } } },
+    });
+    if (!content) return { success: false, error: "Content not found" };
+
+    const createdAtFormatted = formatDate(content.createdAt);
+    const updatedAtFormatted = formatDate(content.updatedAt);
+
+    return {
+      success: true,
+      data: {
+        ...content,
+        createdAtFormatted,
+        updatedAtFormatted,
+      },
+    };
+  } catch (error) {
+    console.error("getContentById error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
 export async function getFavoriteContent() {
   const user = await checkUser();
   if (!user) return { success: false, error: "User not authenticated" };

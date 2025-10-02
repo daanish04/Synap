@@ -4,6 +4,7 @@ import { checkUser } from "@/lib/checkUser";
 import db from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { formatDate } from "@/lib/utils";
+import { nanoid } from "nanoid";
 
 export async function getCollectionsList() {
   const user = await checkUser();
@@ -153,12 +154,14 @@ export async function createCollection(formData: FormData) {
 
   if (title === "") return { success: false, error: "Title is required" };
 
+  const shareHash = nanoid(12);
   try {
     await db.collection.create({
       data: {
         title,
         isPublic,
         userId: user.id,
+        shareHash,
       },
     });
 
@@ -213,14 +216,66 @@ export async function updateCollection(formData: FormData) {
     });
     if (!collection) return { success: false, error: "Collection not found" };
 
+    let shareHash = collection.shareHash;
+
+    if (collection.shareHash === null && isPublic) {
+      shareHash = nanoid(12);
+    }
+
     await db.collection.update({
       where: { id, userId: user.id },
-      data: { title, isPublic },
+      data: { title, isPublic, shareHash },
     });
 
     revalidatePath("/collections");
     revalidatePath(`/collections/${id}`);
     return { success: true };
+  } catch (error) {
+    console.error("updateCollection error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getCollectionByHash(shareHash: string) {
+  if (!shareHash) return { success: false, error: "Collection not found" };
+  try {
+    const collection = await db.collection.findFirst({
+      where: { shareHash },
+      include: { user: true },
+    });
+
+    if (!collection) return { success: false, error: "Collection not found." };
+
+    const contents = await db.content.findMany({
+      where: { collections: { some: { collectionId: collection.id } } },
+      include: { tags: { include: { tag: true } } },
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
+    });
+
+    const tags = await db.tag.findMany({
+      where: {
+        contents: {
+          some: {
+            content: {
+              collections: { some: { collectionId: collection.id } },
+            },
+          },
+        },
+      },
+      distinct: ["title"],
+    });
+
+    return {
+      success: true,
+      data: {
+        collection: {
+          ...collection,
+          createdAtFormatted: formatDate(collection.createdAt),
+        },
+        contents,
+        tags,
+      },
+    };
   } catch (error) {
     console.error("updateCollection error", error);
     return { success: false, error: (error as Error).message };

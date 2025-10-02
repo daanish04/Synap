@@ -240,7 +240,7 @@ export default function ContentsClient({
 
   return (
     <div className="space-y-6">
-      {mode != "collection" && (
+      {mode != "collection" && mode != "share" && (
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">
             {mode === "favorites" ? "Favorites" : "Contents"}
@@ -364,7 +364,11 @@ export default function ContentsClient({
                 <CardHeader>
                   <CardTitle>
                     <Link
-                      href={`/content/${item.id}`}
+                      href={
+                        mode == "share"
+                          ? `/brain/content/${item.id}`
+                          : `/content/${item.id}`
+                      }
                       className="hover:underline"
                     >
                       {item.title}
