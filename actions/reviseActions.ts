@@ -54,3 +54,28 @@ export async function getReviseContents() {
     return { success: false, error: (error as Error).message };
   }
 }
+
+export async function getDueContents() {
+  const user = await checkUser();
+  if (!user) return { success: false, error: "User not authenticated" };
+
+  try {
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const dueReps = await db.spacedRepetition.findMany({
+      where: {
+        content: { userId: user.id },
+        nextReview: { lte: todayEnd },
+      },
+      include: { content: true },
+      orderBy: { nextReview: "asc" },
+      take: 3,
+    });
+
+    return { success: true, data: dueReps };
+  } catch (error) {
+    console.error("getDueContents error", error);
+    return { success: false, error: (error as Error).message };
+  }
+}

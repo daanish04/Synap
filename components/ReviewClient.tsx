@@ -26,7 +26,7 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
             {contents.due.map((item) => (
               <li
                 key={item.content.id}
-                className="flex-1 p-3 border rounded-md flex justify-between items-center"
+                className="flex-1 p-3 border rounded-md grid grid-cols-3"
               >
                 <h3
                   className="font-medium hover:cursor-pointer hover:underline"
@@ -34,10 +34,12 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
                 >
                   {item.content.title || "Untitled"}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground text-end">
                   Next Review: {item.nextReviewFormatted || "N/A"}
                 </p>
-                <p className="text-sm">{item.repetitions || "0"} reviews</p>
+                <p className="text-sm text-end">
+                  {item.repetitions || "0"} reviews
+                </p>
               </li>
             ))}
           </ul>
@@ -56,7 +58,7 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
             {contents.week.map((item) => (
               <li
                 key={item.content.id}
-                className="flex-1 p-3 border rounded-md flex justify-between items-center"
+                className="flex-1 p-3 border rounded-md grid grid-cols-3"
               >
                 <h3
                   className="font-medium hover:cursor-pointer hover:underline"
@@ -64,10 +66,12 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
                 >
                   {item.content.title || "Untitled"}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground text-end">
                   Next Review: {item.nextReviewFormatted || "N/A"}
                 </p>
-                <p className="text-sm">{item.repetitions || "0"} reviews</p>
+                <p className="text-sm text-end">
+                  {item.repetitions || "0"} reviews
+                </p>
               </li>
             ))}
           </ul>
@@ -86,7 +90,7 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
             {contents.later.map((item) => (
               <li
                 key={item.content.id}
-                className="flex-1 p-3 border rounded-md flex justify-between items-center"
+                className="flex-1 p-3 border rounded-md grid grid-cols-3"
               >
                 <h3
                   className="font-medium hover:cursor-pointer hover:underline"
@@ -94,10 +98,12 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
                 >
                   {item.content.title || "Untitled"}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground text-end">
                   Next Review: {item.nextReviewFormatted || "N/A"}
                 </p>
-                <p className="text-sm">{item.repetitions || "0"} reviews</p>
+                <p className="text-sm text-end">
+                  {item.repetitions || "0"} reviews
+                </p>
               </li>
             ))}
           </ul>
