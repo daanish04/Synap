@@ -36,5 +36,5 @@ export type SR = {
   nextReview: Date | string | null;
   nextReviewFormatted?: string | null;
   isDueToday?: boolean;
-  enabled: boolean;
+  enabled?: boolean;
 };
