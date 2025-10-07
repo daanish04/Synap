@@ -70,7 +70,6 @@ export async function getDueContents() {
       },
       include: { content: true },
       orderBy: { nextReview: "asc" },
-      take: 3,
     });
 
     return { success: true, data: dueReps };
