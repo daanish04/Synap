@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentItem } from "@/lib/types";
+import { ContentItem, SR } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ExternalLink, Heart, Pin, PinOff, Trash2 } from "lucide-react";
@@ -48,6 +48,12 @@ import {
   getCollectionsForContent,
   toggleContentInCollection,
 } from "@/actions/collectionActions";
+import {
+  enableSRForContent,
+  disableSRForContent,
+  getSRForContent,
+  submitSRReview,
+} from "@/actions/srActions";
 
 const ContentBodyClient = ({
   content: initialContent,
@@ -63,6 +69,10 @@ const ContentBodyClient = ({
   const [collections, setCollections] = useState<
     { id: string; title: string; included: boolean }[]
   >([]);
+  const [srLoading, setSrLoading] = useState(false);
+  const [srEnabled, setSrEnabled] = useState<boolean>(false);
+  const [srInitialEnabled, setSrInitialEnabled] = useState<boolean>(false);
+  const [srState, setSrState] = useState<SR | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -73,6 +83,34 @@ const ContentBodyClient = ({
     (async () => {
       const res = await getCollectionsForContent(content.id);
       if (res?.success && res.data) setCollections(res.data);
+    })();
+  }, [content.id]);
+
+  useEffect(() => {
+    (async () => {
+      setSrLoading(true);
+      const res = await getSRForContent(content.id);
+      if (res?.success && res.data) {
+        if (res.data.enabled === false) {
+          setSrEnabled(false);
+          setSrInitialEnabled(false);
+          setSrState(null);
+        } else if (res.data.enabled) {
+          const d = res.data;
+          setSrEnabled(true);
+          setSrInitialEnabled(true);
+          setSrState({
+            interval: d.interval ?? 1,
+            easeFactor: d.easeFactor ?? 2.5,
+            repetitions: d.repetitions ?? 0,
+            nextReview: d.nextReview ?? null,
+            nextReviewFormatted: d.nextReviewFormatted ?? null,
+            isDueToday: !!d.isDueToday,
+            enabled: true,
+          });
+        }
+      }
+      setSrLoading(false);
     })();
   }, [content.id]);
 
@@ -370,53 +408,264 @@ const ContentBodyClient = ({
                     </DrawerHeader>
                     <div className="flex flex-row px-10 gap-2 justify-between items-center">
                       <span>Want it enabled?</span>
-                      <Switch />
+                      <Switch
+                        checked={srEnabled}
+                        onCheckedChange={(v) => setSrEnabled(!!v)}
+                        disabled={srLoading}
+                      />
                     </div>
                     <Separator className="my-4" />
-                    <div className="flex flex-col gap-3">
-                      <div className="text-center">Your review is due:</div>
-                      <div className="grid sm:grid-cols-5 grid-cols-6">
-                        <div className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border rounded-l-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-                          <span className="font-bold text-sm">FORGOT</span>
-                          <span className="text-xs text-muted-foreground">
-                            Completely forgot
-                          </span>
+                    {srState?.enabled ? (
+                      <div className="flex flex-col gap-3">
+                        <div
+                          className={`text-center ${
+                            srState?.isDueToday
+                              ? "text-red-600 font-semibold"
+                              : ""
+                          }`}
+                        >
+                          Next Review Date:{" "}
+                          {srState?.nextReviewFormatted || "Not scheduled"}
                         </div>
-                        <div className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border  hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-                          <span className="font-bold text-sm">HARD</span>
-                          <span className="text-xs text-muted-foreground">
-                            Remembered with difficulty
-                          </span>
-                        </div>
-                        <div className="sm:col-span-1 col-span-2 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-                          <span className="font-bold text-sm">GOOD</span>
-                          <span className="text-xs text-muted-foreground">
-                            Remembered with some effort
-                          </span>
-                        </div>
-                        <div className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-                          <span className="font-bold text-sm">EASY</span>
-                          <span className="text-xs text-muted-foreground">
-                            Remembered easily
-                          </span>
-                        </div>
-                        <div className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border rounded-r-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
-                          <span className="font-bold text-sm">VERY EASY</span>
-                          <span className="text-xs text-muted-foreground">
-                            Too Easy
-                          </span>
+                        {srState?.isDueToday && (
+                          <>
+                            <div className="text-center">
+                              Your review is due:
+                            </div>
+                            <div className="grid sm:grid-cols-5 grid-cols-6">
+                              <button
+                                className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border rounded-l-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                                onClick={async () => {
+                                  setSrLoading(true);
+                                  const res = await submitSRReview(
+                                    content.id,
+                                    0
+                                  );
+                                  setSrLoading(false);
+                                  if (!res?.success)
+                                    return toast.error(res?.error || "Failed");
+                                  toast.success("Review submitted");
+                                  if (res.data) {
+                                    setSrState({
+                                      interval: res.data.interval ?? 1,
+                                      easeFactor: res.data.easeFactor ?? 2.5,
+                                      repetitions: res.data.repetitions ?? 0,
+                                      nextReview: res.data.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        res.data.nextReviewFormatted ?? null,
+                                      isDueToday: false,
+                                      enabled: true,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span className="font-bold text-sm">
+                                  FORGOT
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  Completely forgot
+                                </span>
+                              </button>
+                              <button
+                                className="sm:col-span-1 col-span-3 flex flex-col gap-1 text-center py-1 px-3 border  hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                                onClick={async () => {
+                                  setSrLoading(true);
+                                  const res = await submitSRReview(
+                                    content.id,
+                                    1
+                                  );
+                                  setSrLoading(false);
+                                  if (!res?.success)
+                                    return toast.error(res?.error || "Failed");
+                                  toast.success("Review submitted");
+                                  if (res.data) {
+                                    setSrState({
+                                      interval: res.data.interval ?? 1,
+                                      easeFactor: res.data.easeFactor ?? 2.5,
+                                      repetitions: res.data.repetitions ?? 0,
+                                      nextReview: res.data.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        res.data.nextReviewFormatted ?? null,
+                                      isDueToday: false,
+                                      enabled: true,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span className="font-bold text-sm">HARD</span>
+                                <span className="text-xs text-muted-foreground">
+                                  Remembered with difficulty
+                                </span>
+                              </button>
+                              <button
+                                className="sm:col-span-1 col-span-2 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                                onClick={async () => {
+                                  setSrLoading(true);
+                                  const res = await submitSRReview(
+                                    content.id,
+                                    2
+                                  );
+                                  setSrLoading(false);
+                                  if (!res?.success)
+                                    return toast.error(res?.error || "Failed");
+                                  toast.success("Review submitted");
+                                  if (res.data) {
+                                    setSrState({
+                                      interval: res.data.interval ?? 1,
+                                      easeFactor: res.data.easeFactor ?? 2.5,
+                                      repetitions: res.data.repetitions ?? 0,
+                                      nextReview: res.data.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        res.data.nextReviewFormatted ?? null,
+                                      isDueToday: false,
+                                      enabled: true,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span className="font-bold text-sm">GOOD</span>
+                                <span className="text-xs text-muted-foreground">
+                                  Remembered with some effort
+                                </span>
+                              </button>
+                              <button
+                                className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                                onClick={async () => {
+                                  setSrLoading(true);
+                                  const res = await submitSRReview(
+                                    content.id,
+                                    3
+                                  );
+                                  setSrLoading(false);
+                                  if (!res?.success)
+                                    return toast.error(res?.error || "Failed");
+                                  toast.success("Review submitted");
+                                  if (res.data) {
+                                    setSrState({
+                                      interval: res.data.interval ?? 1,
+                                      easeFactor: res.data.easeFactor ?? 2.5,
+                                      repetitions: res.data.repetitions ?? 0,
+                                      nextReview: res.data.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        res.data.nextReviewFormatted ?? null,
+                                      isDueToday: false,
+                                      enabled: true,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span className="font-bold text-sm">EASY</span>
+                                <span className="text-xs text-muted-foreground">
+                                  Remembered easily
+                                </span>
+                              </button>
+                              <button
+                                className="col-span-2 sm:col-span-1 flex flex-col gap-1 text-center py-1 px-3 border rounded-r-md hover:scale-105 hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                                onClick={async () => {
+                                  setSrLoading(true);
+                                  const res = await submitSRReview(
+                                    content.id,
+                                    4
+                                  );
+                                  setSrLoading(false);
+                                  if (!res?.success)
+                                    return toast.error(res?.error || "Failed");
+                                  toast.success("Review submitted");
+                                  if (res.data) {
+                                    setSrState({
+                                      interval: res.data.interval ?? 1,
+                                      easeFactor: res.data.easeFactor ?? 2.5,
+                                      repetitions: res.data.repetitions ?? 0,
+                                      nextReview: res.data.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        res.data.nextReviewFormatted ?? null,
+                                      isDueToday: false,
+                                      enabled: true,
+                                    });
+                                  }
+                                }}
+                              >
+                                <span className="font-bold text-sm">
+                                  VERY EASY
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  Too Easy
+                                </span>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-3 px-10">
+                        <div className="text-sm text-muted-foreground text-center">
+                          Spaced Repetition is disabled for this content.
                         </div>
                       </div>
-                    </div>
+                    )}
                     <DrawerFooter>
-                      <div className="text-sm text-muted-foreground text-center">
-                        Next Review Date: 12/12/2023
-                      </div>
                       <DrawerClose asChild>
                         <div className="flex flex-col gap-1">
                           <Button
+                            disabled={
+                              srLoading || srEnabled === srInitialEnabled
+                            }
                             variant="secondary"
                             className="cursor-pointer"
+                            onClick={async () => {
+                              setSrLoading(true);
+                              try {
+                                if (srEnabled && !srInitialEnabled) {
+                                  const res = await enableSRForContent(
+                                    content.id
+                                  );
+                                  if (!res?.success)
+                                    throw new Error(
+                                      res?.error || "Failed to enable"
+                                    );
+                                  const refreshed = await getSRForContent(
+                                    content.id
+                                  );
+                                  if (
+                                    refreshed?.success &&
+                                    refreshed.data &&
+                                    refreshed.data.enabled
+                                  ) {
+                                    const d = refreshed.data;
+                                    setSrInitialEnabled(true);
+                                    setSrState({
+                                      interval: d.interval ?? 1,
+                                      easeFactor: d.easeFactor ?? 2.5,
+                                      repetitions: d.repetitions ?? 0,
+                                      nextReview: d.nextReview ?? null,
+                                      nextReviewFormatted:
+                                        d.nextReviewFormatted ?? null,
+                                      isDueToday: !!d.isDueToday,
+                                      enabled: true,
+                                    });
+                                  }
+                                  toast.success("Enabled spaced repetition");
+                                } else if (!srEnabled && srInitialEnabled) {
+                                  const res = await disableSRForContent(
+                                    content.id
+                                  );
+                                  if (!res?.success)
+                                    throw new Error(
+                                      res?.error || "Failed to disable"
+                                    );
+                                  setSrInitialEnabled(false);
+                                  setSrState(null);
+                                  toast.success("Disabled spaced repetition");
+                                } else {
+                                  toast.success("Saved");
+                                }
+                              } catch (e) {
+                                toast.error((e as Error).message);
+                                setSrEnabled(srInitialEnabled);
+                              } finally {
+                                setSrLoading(false);
+                              }
+                            }}
                           >
                             Save
                           </Button>

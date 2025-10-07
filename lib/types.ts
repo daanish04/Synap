@@ -28,3 +28,13 @@ export type CollectionForContent = {
   title: string;
   included: boolean;
 };
+
+export type SR = {
+  interval: number;
+  easeFactor: number;
+  repetitions: number;
+  nextReview: Date | string | null;
+  nextReviewFormatted?: string | null;
+  isDueToday?: boolean;
+  enabled: boolean;
+};
