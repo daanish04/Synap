@@ -46,7 +46,7 @@ const HowItWorks = () => {
         <h2 className="px-10 text-3xl font-bold text-left text-slate-700 mb-10">
           How It <span className="text-blue-500">Works</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-15">
           {steps.map((s, i) => (
             <div
               key={s.title}

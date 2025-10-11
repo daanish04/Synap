@@ -59,10 +59,10 @@ const Hero = () => {
     );
   }, []);
   return (
-    <section className="relative py-20 flex flex-col items-center justify-start text-center bg-gradient-to-r from-slate-50 via-blue-100 to-violet-100 border-b-2 border-slate-200/60 overflow-hidden">
+    <section className="relative p-20 flex flex-col items-center justify-start text-center bg-gradient-to-r from-slate-50 via-blue-100 to-violet-100 border-b-2 border-slate-200/60 overflow-hidden">
       <div className="circle1 absolute bottom-10 right-15 bg-violet-800 blur-2xl h-20 w-20 rounded-full"></div>
       <div className="circle2 absolute top-20 left-15 bg-indigo-800 blur-3xl h-25 w-25 rounded-full"></div>
-      <div className="container overflow-hidden px-4 flex flex-col md:flex-row items-center gap-4">
+      <div className="container overflow-hidden px-10 flex flex-col md:flex-row items-center gap-4">
         <div className="hero-data flex flex-col">
           <p className="text-base font-semibold text-gray-400 text-left">
             Organize what you learn
