@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SR } from "@/lib/types";
 import { Button } from "../ui/button";
 import {
@@ -35,7 +35,7 @@ const SRDrawer = ({
   const [srInitialEnabled, setSrInitialEnabled] = useState(false);
   const [srState, setSrState] = useState<SR | null>(initialState || null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSrEnabled(!!(initialState && initialState.enabled));
     setSrInitialEnabled(!!(initialState && initialState.enabled));
     setSrState(initialState || null);

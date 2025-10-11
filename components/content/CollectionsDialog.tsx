@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CollectionForContent } from "@/lib/types";
 import { Button } from "../ui/button";
 import {
@@ -22,6 +22,10 @@ const CollectionsDialog = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [list, setList] = useState<CollectionForContent[]>(collections || []);
+
+  useEffect(() => {
+    setList(collections || []);
+  }, [collections]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
