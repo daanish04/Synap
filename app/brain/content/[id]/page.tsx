@@ -1,5 +1,6 @@
 import { getPublicContentById } from "@/actions/contentActions";
 import ContentBodyClient from "@/components/ContentBodyClient";
+import Navbar from "@/components/Navbar";
 import React from "react";
 
 type Props = {
@@ -20,9 +21,12 @@ const BrainContentPage = async ({ params }: Props) => {
   const content = response.data;
 
   return (
-    <div className="p-6">
-      <ContentBodyClient content={content} mode="share" />
-    </div>
+    <>
+      <Navbar />
+      <div className="p-6">
+        <ContentBodyClient content={content} mode="share" />
+      </div>
+    </>
   );
 };
 
