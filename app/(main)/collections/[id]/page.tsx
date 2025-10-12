@@ -6,6 +6,7 @@ import {
 import ContentsClient from "@/components/ContentsClient";
 import CollectionCreateDialog from "@/components/CollectionCreateDialog";
 import PublicDialog from "@/components/public-dialog";
+import CollectionsAlertDialog from "@/components/CollectionsAlertDialog";
 
 type Props = {
   params?: Promise<{ id: string }>;
@@ -43,7 +44,8 @@ const CollectionDetailPage = async ({ params }: Props) => {
             </span>
           </div>
         </div>
-        <div>
+        <div className="flex flex-col md:flex-row md:gap-3 gap-2 items-center">
+          <CollectionsAlertDialog collectionId={id} />
           <CollectionCreateDialog
             create={updateCollection}
             id={id}
