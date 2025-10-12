@@ -13,7 +13,7 @@ const SignInPage = () => {
         </div>
       </ClerkLoading>
       <ClerkLoaded>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-6">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100 p-3">
           <div className="w-full max-w-5xl border-b-2 border-slate-200/60 rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
             {/* Left: illustration with background image */}
             <div className="hidden lg:flex flex-col items-center justify-start gap-6 p-12 relative overflow-hidden">
@@ -45,7 +45,7 @@ const SignInPage = () => {
             </div>
 
             {/* Right: Clerk SignIn form */}
-            <div className="relative flex items-center justify-center p-6 lg:p-10">
+            <div className="relative flex items-center justify-center p-2 lg:p-10">
               <div className="w-full max-w-md">
                 <div className="flex items-center justify-between mb-6">
                   <div className="lg:hidden flex items-center gap-3">

@@ -17,7 +17,16 @@ const steps = [
   },
   {
     title: "Share",
-    body: "Make a collection public with one click — get a unique share link like /collection/abc123 to show the world.",
+    // We'll render this body as JSX instead of a plain string when mapping so we can style the example path.
+    body: (
+      <>
+        Make a collection public with one click — get a unique share link like
+        <code className="font-mono bg-slate-100 px-1 rounded text-sm">
+          /collection/abc123
+        </code>
+        to show the world.
+      </>
+    ),
   },
 ];
 const HowItWorks = () => {
