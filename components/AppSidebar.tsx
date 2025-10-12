@@ -109,12 +109,12 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem className="flex flex-row items-center justify-center gap-2 px-4 py-2">
-            <a href="/profile" className="flex flex-row items-center gap-2">
+            <Link href="/profile" className="flex flex-row items-center gap-2">
               <User className="h-5 w-5" strokeWidth={2.5} />
               <span className="text-lg font-semibold text-neutral-800">
                 Profile
               </span>
-            </a>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
