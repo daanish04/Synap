@@ -110,7 +110,7 @@ const ContentBodyClient = ({
         <div className="sticky bottom-0 bg-white sm:pb-4 pb-14">
           <Separator className="my-4" />
           <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
-            <ContentActions content={content} />
+            <ContentActions content={content} setContent={setContent} />
             {/* Space Repitition and Review actions */}
             <div className="flex flex-row gap-2 items-center">
               <SRDrawer contentId={content.id} initialState={srState} />

@@ -23,15 +23,23 @@ import {
 } from "@/actions/contentActions";
 import { useRouter } from "next/navigation";
 
-const ContentActions = ({ content }: { content: ContentItem }) => {
+const ContentActions = ({
+  content,
+  setContent,
+}: {
+  content: ContentItem;
+  setContent: React.Dispatch<React.SetStateAction<ContentItem>>;
+}) => {
   const router = useRouter();
 
   const handleToggleFavorite = async () => {
     const wasLiked = content.isFav;
-    content.isFav = !content.isFav;
+    // optimistic approach
+    setContent((prev) => ({ ...prev, isFav: !prev.isFav }));
+
     const res = await toggleFavorite(content.id);
     if (!res?.success) {
-      content.isFav = wasLiked;
+      setContent((prev) => ({ ...prev, isFav: wasLiked }));
       return toast.error(res?.error || "Failed");
     }
     toast.success(content.isFav ? "Removed favorite" : "Added favorite");
@@ -39,10 +47,10 @@ const ContentActions = ({ content }: { content: ContentItem }) => {
 
   const handleTogglePinned = async () => {
     const wasPinned = content.isPinned;
-    content.isPinned = !content.isPinned;
+    setContent((prev) => ({ ...prev, isPinned: !prev.isPinned }));
     const res = await togglePin(content.id);
     if (!res?.success) {
-      content.isPinned = wasPinned;
+      setContent((prev) => ({ ...prev, isPinned: wasPinned }));
       return toast.error(res?.error || "Failed");
     }
     toast.success(content.isPinned ? "Unpinned" : "Pinned");
