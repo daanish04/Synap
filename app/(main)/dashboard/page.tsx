@@ -27,11 +27,11 @@ const DashboardPage = async () => {
   const items = dueContents.data || [];
 
   return (
-    <div className="p-6 space-y-4 h-[calc(100vh-3rem)] md:overflow-y-hidden overflow-auto">
+    <div className="p-6 space-y-4 h-[calc(100vh-3rem)] lg:overflow-y-hidden overflow-auto">
       <h2 className="text-2xl font-semibold">Dashboard</h2>
 
-      <div className="grid grid-cols-10 sm:grid-rows-12 grid-rows-4 gap-3 md:h-[calc(100vh-9rem)] ">
-        <div className="col-span-10 sm:row-span-4 row-span-1">
+      <div className="lg:grid lg:grid-cols-10 lg:grid-rows-4 flex flex-col gap-3">
+        <div className="lg:col-span-10 sm:row-span-4 row-span-1">
           <DashboardPinned contents={pinned} />
         </div>
         <div className="sm:col-span-5 sm:row-span-4 col-span-10 row-span-1">
