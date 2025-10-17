@@ -1,8 +1,9 @@
 import { ClerkLoaded, ClerkLoading, SignIn } from "@clerk/nextjs";
 import React from "react";
 import Link from "next/link";
-import { BrainCircuit, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
+import LogoName from "@/components/LogoName";
 
 const SignInPage = () => {
   return (
@@ -18,13 +19,7 @@ const SignInPage = () => {
             {/* Left: illustration with background image */}
             <div className="hidden lg:flex flex-col items-center justify-start gap-6 p-12 relative overflow-hidden">
               <div className=" w-full flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <BrainCircuit
-                    className="text-purple-700 h-10 w-10 rotate-90"
-                    strokeWidth={2}
-                  />
-                  <div className="text-4xl font-bold">Synap</div>
-                </div>
+                <LogoName />
 
                 <h2 className="text-3xl font-bold text-slate-900 mt-10">
                   Welcome back - pick up where you left off!
@@ -48,12 +43,8 @@ const SignInPage = () => {
             <div className="relative flex items-center justify-center p-2 lg:p-10">
               <div className="w-full max-w-md">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="lg:hidden flex items-center gap-3">
-                    <BrainCircuit
-                      className="text-purple-700 h-10 w-10 rotate-90"
-                      strokeWidth={2}
-                    />
-                    <div className="text-4xl font-bold">Synap</div>
+                  <div className="lg:hidden block">
+                    <LogoName />
                   </div>
                 </div>
 

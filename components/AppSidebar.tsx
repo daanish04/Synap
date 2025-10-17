@@ -24,6 +24,7 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
+import LogoName from "./LogoName";
 
 // Menu items.
 const items = [
@@ -60,12 +61,8 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="flex items-center justify-between px-4 py-2">
-        <Link href="/" className="flex flex-row items-center gap-3">
-          <BrainCircuit
-            className="text-purple-700 h-8 w-8 rotate-90"
-            strokeWidth={2}
-          />
-          <h1 className="text-4xl font-bold text-blue-500">Synap</h1>
+        <Link href="/">
+          <LogoName />
         </Link>
       </SidebarHeader>
       <div className="px-10">
