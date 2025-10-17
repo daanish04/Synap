@@ -27,7 +27,7 @@ const DashboardPage = async () => {
   const items = dueContents.data || [];
 
   return (
-    <div className="px-6 space-y-4   overflow-auto">
+    <div className="px-6 space-y-4">
       <h2 className="text-2xl font-semibold">Dashboard</h2>
 
       <div className="lg:grid lg:grid-cols-10 lg:grid-rows-4 flex flex-col gap-3">
