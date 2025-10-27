@@ -7,7 +7,7 @@ const CtaBlock = () => {
   return (
     <section className="py-10 mt-12 bg-blue-50">
       <div className="container mx-auto flex flex-col items-center px-5">
-        <h2 className="text-3xl font-bold text-slate-700 mb-5">
+        <h2 className="text-3xl font-bold text-center text-slate-700 mb-5">
           Ready to Build Your Brain?
         </h2>
         <p className="mb-3 md:mb-4 text-gray-600 max-w-2xl text-center leading-relaxed">

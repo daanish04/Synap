@@ -64,7 +64,7 @@ const Hero = () => {
       <div className="circle2 absolute top-20 left-15 bg-indigo-800 blur-3xl h-25 w-25 rounded-full"></div>
       <div className="container overflow-hidden px-10 flex flex-col md:flex-row items-center gap-4">
         <div className="hero-data flex flex-col">
-          <p className="text-base font-semibold text-gray-400 text-left">
+          <p className="text-base font-semibold text-gray-500 text-left">
             Organize what you learn
           </p>
           <h2 className="md:text-7xl text-6xl font-extrabold text-blue-700 text-left tracking-wide">

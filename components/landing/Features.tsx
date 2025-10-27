@@ -68,7 +68,7 @@ const Features = () => {
         <h2 className="px-10 text-3xl font-bold text-left text-slate-700 mb-10">
           Features - What You <span className="text-blue-500">Can</span> Do
         </h2>
-        <div className="px-10 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="sm:px-10 px-8 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {features.map(({ icon: Icon, title, body }) => (
             <Card
               key={title}

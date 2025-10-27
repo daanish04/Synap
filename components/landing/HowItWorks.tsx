@@ -20,11 +20,8 @@ const steps = [
     // We'll render this body as JSX instead of a plain string when mapping so we can style the example path.
     body: (
       <>
-        Make a collection public with one click — get a unique share link like
-        <code className="font-mono bg-slate-100 px-1 rounded text-sm">
-          /collection/abc123
-        </code>
-        to show the world.
+        Make a collection public with one click. Get a unique share link to show
+        the world.
       </>
     ),
   },
@@ -55,7 +52,7 @@ const HowItWorks = () => {
         <h2 className="px-10 text-3xl font-bold text-left text-slate-700 mb-10">
           How It <span className="text-blue-500">Works</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-15">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:px-15 px-5">
           {steps.map((s, i) => (
             <div
               key={s.title}
