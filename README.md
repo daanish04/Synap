@@ -175,9 +175,9 @@ enum ReviewQuality {
 
 ## 🔮 Future Enhancements
 
-- **AI Integration**: Content summarization, quiz generation, and connection discovery
+- **AI Integration**: Content summarization, quiz generation, tag suggestions and connection discovery
 - **Pagination**: Efficient handling of large content datasets
-- **Collection Deletion**: UI for removing collections (backend ready)
+- **Browser Extension**: User friendly content addition and sharing
 - **Advanced Search**: Full-text search across content and metadata
 - **Export/Import**: Data portability features
 - **Dark/Light Mode**: Theme switching with next-themes
