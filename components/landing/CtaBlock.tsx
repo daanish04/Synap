@@ -86,7 +86,7 @@ const CtaBlock = () => {
   return (
     <section
       ref={root}
-      className="relative py-20 px-5 sm:px-10 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900"
+      className="relative py-20 px-5 sm:px-10 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

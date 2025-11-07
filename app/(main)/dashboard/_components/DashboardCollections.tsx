@@ -32,7 +32,7 @@ const DashboardCollections = ({
 
   return (
     <div className="relative h-full px-4 py-2 rounded-xl border">
-      <div className="absolute -right-3 -top-3 flex items-center rounded-xl bg-gray-200 hover:bg-gray-300 transition-colors duration-300 cursor-pointer p-1.5 border">
+      <div className="absolute -right-3 -top-3 flex items-center rounded-xl bg-muted hover:bg-muted/80 transition-colors duration-300 cursor-pointer p-1.5 border">
         <Link href="/collections">
           <ChevronsRight className="h-5 w-5" />
         </Link>
@@ -41,7 +41,7 @@ const DashboardCollections = ({
       <div className="flex-1 grid md:grid-cols-12 grid-cols-3 gap-2 px-2">
         {collectionsData.length === 0 ? (
           <div className="flex items-center justify-center">
-            <p className="text-gray-600 text-center italic">
+            <p className="text-muted-foreground text-center italic">
               No Collections created
             </p>
           </div>

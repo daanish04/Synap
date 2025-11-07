@@ -9,7 +9,6 @@ const RevisePage = async () => {
   }
 
   const contents = response.data;
-  console.log(contents);
 
   return (
     <div className="p-6 space-y-6">

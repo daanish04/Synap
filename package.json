@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.3",
+    "@clerk/themes": "^2.4.33",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.1",
     "@prisma/client": "^6.14.0",

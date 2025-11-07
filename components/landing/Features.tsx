@@ -103,7 +103,7 @@ const Features = () => {
   return (
     <section
       ref={root}
-      className="relative py-16 px-5 sm:px-10 overflow-hidden bg-white"
+      className="relative py-16 px-5 sm:px-10 overflow-hidden bg-background"
     >
       {/* Background decoration - geometric patterns */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -115,13 +115,13 @@ const Features = () => {
       <div className="container mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-4">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-4">
             Everything You{" "}
             <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
               Need
             </span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Powerful features designed to make knowledge management effortless
           </p>
         </div>
@@ -131,7 +131,7 @@ const Features = () => {
           {features.map(({ icon: Icon, title, body, gradient }) => (
             <div
               key={title}
-              className="feature-card group relative bg-gradient-to-br from-slate-50 to-white rounded-3xl p-8 shadow-sm border-2 border-slate-100 hover:border-slate-200 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50"
+              className="feature-card group relative bg-gradient-to-br from-muted/30 to-card rounded-3xl p-8 shadow-sm border-2 border-border hover:border-border/80 transition-all duration-300 hover:shadow-xl hover:shadow-foreground/5"
             >
               {/* Large colorful icon with gradient bg */}
               <div className="relative mb-6 flex items-start justify-between">
@@ -155,15 +155,15 @@ const Features = () => {
               </div>
 
               {/* Content */}
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:via-slate-700 group-hover:to-slate-900 group-hover:bg-clip-text transition-all duration-300">
+              <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-foreground group-hover:via-foreground/80 group-hover:to-foreground group-hover:bg-clip-text transition-all duration-300">
                 {title}
               </h3>
-              <p className="text-slate-600 leading-relaxed text-base sm:text-lg">
+              <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
                 {body}
               </p>
 
               {/* Animated accent bar */}
-              <div className="mt-6 h-1 bg-slate-100 rounded-full overflow-hidden">
+              <div className="mt-6 h-1 bg-muted rounded-full overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r ${gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`}
                 ></div>

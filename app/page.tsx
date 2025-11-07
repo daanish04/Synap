@@ -24,8 +24,8 @@ export default function Home() {
       <CtaBlock />
 
       {/* Footer */}
-      <footer className="py-6 bg-slate-50 border-t border-slate-200/60">
-        <div className="container mx-auto text-center text-sm text-gray-500">
+      <footer className="py-6 bg-muted/50 border-t border-border">
+        <div className="container mx-auto text-center text-sm text-muted-foreground">
           &copy; 2025 Synap. All rights reserved.
         </div>
       </footer>

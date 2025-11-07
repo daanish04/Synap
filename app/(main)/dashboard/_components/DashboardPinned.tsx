@@ -52,7 +52,9 @@ const DashboardPinned = ({ contents }: { contents: ContentItem[] }) => {
     <div className="h-full px-2 rounded-xl">
       <h3 className="text-xl font-semibold mb-1">Pinned</h3>
       {pinnedContents.length === 0 ? (
-        <p className="text-gray-600 text-center italic">No pinned contents</p>
+        <p className="text-muted-foreground text-center italic">
+          No pinned contents
+        </p>
       ) : (
         <div className="grid sm:grid-cols-5 grid-cols-2 gap-2 px-1">
           {pinnedContents.map((content) => (

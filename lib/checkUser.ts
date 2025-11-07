@@ -28,7 +28,10 @@ export const checkUser = async () => {
     });
     return newUser;
   } catch (error) {
-    console.log(error);
+    // Log error but don't expose to user
+    if (process.env.NODE_ENV === "development") {
+      console.error("checkUser error:", error);
+    }
     return null;
   }
 };

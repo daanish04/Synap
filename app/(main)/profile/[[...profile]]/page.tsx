@@ -7,11 +7,14 @@ import {
   SignOutButton,
   UserProfile,
 } from "@clerk/nextjs";
+import { shadesOfPurple } from "@clerk/themes";
 import { LoaderCircle } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const ProfilePage = () => {
+  const { theme } = useTheme();
   const router = useRouter();
   return (
     <>
@@ -23,7 +26,11 @@ const ProfilePage = () => {
       <ClerkLoaded>
         <div className=" min-h-screen flex items-center justify-center">
           <div className="relative z-10">
-            <UserProfile />
+            <UserProfile
+              appearance={{
+                theme: theme === "dark" ? shadesOfPurple : undefined,
+              }}
+            />
             <div className="absolute lg:top-5 top-2 right-5 z-30">
               <SignOutButton>
                 <Button

@@ -25,6 +25,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
 import LogoName from "./LogoName";
+import { ThemeToggle } from "./ThemeToggle";
 
 // Menu items.
 const items = [
@@ -78,7 +79,7 @@ export function AppSidebar() {
               alt="Picture of the author"
               className="rounded-full"
             />
-            <h2 className="text-xl text-center font-semibold text-neutral-800">
+            <h2 className="text-xl text-center font-semibold text-foreground">
               Hey, {user?.firstName || "there"}!
             </h2>
           </div>
@@ -90,7 +91,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild>
                   <Link href={item.url}>
                     <item.icon />
-                    <span className="text-lg font-semibold text-neutral-800">
+                    <span className="text-lg font-semibold text-foreground">
                       {item.title}
                     </span>
                   </Link>
@@ -105,13 +106,14 @@ export function AppSidebar() {
       </div>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem className="flex flex-row items-center justify-center gap-2 px-4 py-2">
+          <SidebarMenuItem className="flex flex-row items-center justify-center gap-5 px-4 py-2">
             <Link href="/profile" className="flex flex-row items-center gap-2">
               <User className="h-5 w-5" strokeWidth={2.5} />
-              <span className="text-lg font-semibold text-neutral-800">
+              <span className="text-lg font-semibold text-foreground">
                 Profile
               </span>
             </Link>
+            <ThemeToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

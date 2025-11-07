@@ -85,15 +85,15 @@ const HowItWorks = () => {
   return (
     <section
       ref={root}
-      className="relative py-20 px-10 overflow-hidden bg-white"
+      className="relative py-20 px-10 overflow-hidden bg-background"
     >
       {/* Background svg */}
       <div className="absolute -left-20 -right-20 sm:-top-40 top-5 pointer-events-none">
-        <PaintRoll color="#C0B5FA" />
+        <PaintRoll />
       </div>
 
       <div className="block sm:hidden absolute -left-20 -right-20 top-40 pointer-events-none">
-        <PaintRoll color="#C0B5FA" />
+        <PaintRoll />
       </div>
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -111,13 +111,13 @@ const HowItWorks = () => {
       <div className="container mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-extrabold text-slate-800 mb-4">
+          <h2 className="text-5xl font-extrabold text-foreground mb-4">
             How It{" "}
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-violet-600 bg-clip-text text-transparent">
               Works
             </span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Transform how you capture, organize, and share knowledge in three
             simple steps
           </p>
@@ -131,7 +131,7 @@ const HowItWorks = () => {
               return (
                 <div
                   key={step.title}
-                  className={`works-card group relative overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200/60 transition-all duration-300 hover:shadow-2xl lg:hover:-translate-y-2 cursor-pointer 
+                  className={`works-card group relative overflow-hidden bg-card rounded-2xl shadow-xl border border-border transition-all duration-300 hover:shadow-2xl lg:hover:-translate-y-2 cursor-pointer 
             p-6 lg:p-8
             ${index === 1 ? "lg:mt-12" : ""}`}
                 >
@@ -174,14 +174,14 @@ const HowItWorks = () => {
 
                     {/* Title */}
                     <h3
-                      className={`font-bold text-slate-800
+                      className={`font-bold text-foreground
                 text-xl lg:text-2xl lg:mb-4 ${/* Title size & margin */ ""}`}
                     >
                       {step.title}
                     </h3>
                   </div>
 
-                  <p className="text-slate-600 leading-relaxed mb-2 lg:mb-0">
+                  <p className="text-muted-foreground leading-relaxed mb-2 lg:mb-0">
                     {step.body}
                   </p>
 

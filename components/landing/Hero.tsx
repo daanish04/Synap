@@ -59,22 +59,22 @@ const Hero = () => {
     );
   }, []);
   return (
-    <section className="relative sm:py-24 sm:px-20 px-5 py-12 flex flex-col items-center justify-start text-center bg-gradient-to-br from-white via-blue-50/50 to-violet-50/50 border-b border-slate-200/60 overflow-hidden">
+    <section className="relative sm:py-24 sm:px-20 px-5 py-12 flex flex-col items-center justify-start text-center bg-gradient-to-br from-background via-blue-50/50 dark:via-blue-950/20 to-violet-50/50 dark:to-violet-950/20 border-b border-border overflow-hidden">
       <div className="circle1 absolute bottom-10 right-15 w-96 h-96 bg-gradient-to-br from-violet-500/20 to-purple-500/20 blur-3xl rounded-full animate-pulse"></div>
       <div className="circle2 absolute top-20 left-15 w-[500px] h-[500px] bg-gradient-to-br from-indigo-500/20 to-blue-500/20 blur-3xl rounded-full animate-pulse"></div>
 
       <div className="container rounded-lg overflow-hidden px-5 sm:px-10 flex flex-col lg:flex-row items-center gap-8 md:gap-12 max-w-7xl">
         <div className="hero-data flex flex-col md:flex-1 text-left">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 border border-blue-200/50 w-fit">
+          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 dark:from-blue-900/30 to-purple-100 dark:to-purple-900/30 border border-blue-200/50 dark:border-blue-800/30 w-fit">
             <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-foreground">
               Organize what you learn
             </p>
           </div>
 
           {/* Headlines with animation-ready classes */}
-          <h2 className="md:text-7xl text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2">
+          <h2 className="md:text-7xl text-5xl sm:text-6xl font-extrabold text-foreground tracking-tight leading-tight mb-2">
             Capture.{" "}
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-violet-600 bg-clip-text text-transparent">
               Bundle.
@@ -82,7 +82,7 @@ const Hero = () => {
             Share.
           </h2>
 
-          <p className="md:text-xl text-base text-slate-600 font-medium leading-relaxed mt-6 max-w-xl">
+          <p className="md:text-xl text-base text-muted-foreground font-medium leading-relaxed mt-6 max-w-xl">
             Capture links and notes as cards, group them into collections, and
             keep them fresh with spaced repetition. AI helps you summarize,
             quiz, and connect ideas.
@@ -116,22 +116,22 @@ const Hero = () => {
           </div>
 
           {/* Stats or key points */}
-          <div className="flex flex-wrap gap-6 mt-10 pt-8 border-t border-slate-200">
+          <div className="flex flex-wrap gap-6 mt-10 pt-8 border-t border-border">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-              <span className="text-sm text-slate-600 font-medium">
+              <span className="text-sm text-muted-foreground font-medium">
                 Free Forever
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm text-slate-600 font-medium">
+              <span className="text-sm text-muted-foreground font-medium">
                 No Credit Card
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span className="text-sm text-slate-600 font-medium">
+              <span className="text-sm text-muted-foreground font-medium">
                 Instant Setup
               </span>
             </div>
@@ -144,7 +144,7 @@ const Hero = () => {
             alt="Brain with connecting orbits"
             width={600}
             height={600}
-            className="hero-img w-full max-w-md sm:max-w-lg rounded-2xl shadow-2xl border border-slate-100"
+            className="hero-img w-full max-w-md sm:max-w-lg rounded-2xl shadow-2xl border border-border"
             loading="eager"
             priority
           />

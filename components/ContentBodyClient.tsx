@@ -65,7 +65,7 @@ const ContentBodyClient = ({
         <div className="flex flex-col md:flex-row md:gap-3 gap-1 items-end">
           <h1 className="text-2xl font-bold ">{content.title || "Untitled"}</h1>
           {content.updatedAtFormatted && (
-            <span className="text-xs  text-gray-500">
+            <span className="text-xs  text-muted-foreground">
               (Last Updated: {content.updatedAtFormatted})
             </span>
           )}
@@ -107,7 +107,7 @@ const ContentBodyClient = ({
       </div>
 
       {mode != "share" && (
-        <div className="sticky bottom-0 bg-white sm:pb-4 pb-14">
+        <div className="sticky bottom-0 bg-background sm:pb-4 pb-14">
           <Separator className="my-4" />
           <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
             <ContentActions content={content} setContent={setContent} />

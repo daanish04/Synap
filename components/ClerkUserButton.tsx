@@ -3,10 +3,19 @@
 import { UserButton } from "@clerk/nextjs";
 // import { User } from "lucide-react";
 import React from "react";
+import { shadesOfPurple } from "@clerk/themes";
+import { useTheme } from "next-themes";
 
 const ClerkUserButton = () => {
+  const { theme } = useTheme();
   return (
-    <UserButton userProfileMode="navigation" userProfileUrl="/profile">
+    <UserButton
+      appearance={{
+        theme: theme === "dark" ? shadesOfPurple : undefined,
+      }}
+      userProfileMode="navigation"
+      userProfileUrl="/profile"
+    >
       {/* <UserButton.MenuItems>
         <UserButton.Link
           label="Visit Profile"

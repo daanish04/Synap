@@ -48,7 +48,7 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
       <Separator />
       {/* Week */}
       <div className="flex-1">
-        <h2 className="text-xl font-semibold text-slate-700">Week</h2>
+        <h2 className="text-xl font-semibold text-foreground">Week</h2>
         {contents.week.length === 0 ? (
           <div className="text-sm text-muted-foreground text-center">
             No items to review.
@@ -80,7 +80,7 @@ const ReviewClientPage = ({ contents }: { contents: ReviseContents }) => {
       <Separator />
       {/* Later */}
       <div className="flex-1">
-        <h2 className="text-xl font-semibold text-slate-700">Later</h2>
+        <h2 className="text-xl font-semibold text-foreground">Later</h2>
         {contents.later.length === 0 ? (
           <div className="text-sm text-muted-foreground text-center">
             No items to review.
