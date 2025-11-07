@@ -38,6 +38,7 @@ Synap is a comprehensive knowledge management platform designed to help users ca
 ### 🎨 Modern UI/UX
 
 - **Responsive Design**: Mobile-first design with Tailwind CSS
+- **Dark/Light Mode**: Theme switching with next-themes
 - **Interactive Animations**: GSAP-powered smooth animations and transitions
 - **Component Library**: Custom UI components built with ShadCN UI
 
@@ -180,5 +181,4 @@ enum ReviewQuality {
 - **Browser Extension**: User friendly content addition and sharing
 - **Advanced Search**: Full-text search across content and metadata
 - **Export/Import**: Data portability features
-- **Dark/Light Mode**: Theme switching with next-themes
 - **Blog-like Environment**: Users able to follow other's profiles and save collections, with visible likability and views for each content/collection. More personalized user profile page (Bio, Social Links, Followers/Following List, Avatar, Achievements) [Low]
