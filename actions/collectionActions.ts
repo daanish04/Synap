@@ -240,7 +240,7 @@ export async function getCollectionByHash(shareHash: string) {
   if (!shareHash) return { success: false, error: "Collection not found" };
   try {
     const collection = await db.collection.findFirst({
-      where: { shareHash },
+      where: { shareHash, isPublic: true },
       include: { user: true },
     });
 
